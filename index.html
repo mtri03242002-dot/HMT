@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home tiện ích</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Home</h1>
+        <p id="vn-time" aria-live="polite"></p>
+        <p id="vn-date"></p>
+      </header>
+
+      <section class="calendar-card">
+        <h2>Lịch Việt Nam</h2>
+        <div class="calendar-header">
+          <button id="prev-month" aria-label="Tháng trước">◀</button>
+          <h3 id="month-label"></h3>
+          <button id="next-month" aria-label="Tháng sau">▶</button>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+      </section>
+
+      <section class="shortcuts-card">
+        <div class="shortcut-title-row">
+          <h2>Lối tắt</h2>
+          <button id="add-shortcut">Thêm lối tắt</button>
+        </div>
+        <div id="shortcut-list" class="shortcut-list"></div>
+      </section>
+    </main>
+
+    <template id="shortcut-template">
+      <a class="shortcut-item" target="_blank" rel="noopener noreferrer">
+        <img class="shortcut-icon" alt="" />
+        <span class="shortcut-name"></span>
+        <button class="icon-btn edit" title="Đổi icon">🎨</button>
+        <button class="icon-btn remove" title="Xóa">✕</button>
+      </a>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
