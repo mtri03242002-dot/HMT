@@ -1,10 +1,10 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/index.html b/index.html
 new file mode 100644
-index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68a54acede
+index 0000000000000000000000000000000000000000..b23e72c738f53e23769b10541ee95129c22b2b62
 --- /dev/null
 +++ b/index.html
-@@ -0,0 +1,218 @@
+@@ -0,0 +1,222 @@
 +<!doctype html>
 +<html lang="vi">
 +<head>
@@ -12,39 +12,48 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 +  <title>Home tiện ích</title>
 +  <style>
-+    :root { color-scheme: light dark; --bg:#f5f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280; --accent:#2563eb; --border:#dbe2ef; }
-+    * { box-sizing: border-box; }
-+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--text); }
-+    .layout { min-height: 100vh; display: grid; grid-template-columns: 220px 1fr; }
-+    .sidebar { border-right:1px solid var(--border); background:var(--card); padding:20px 12px; }
-+    .sidebar h2 { margin: 0 0 14px; font-size: 1rem; color: var(--muted); }
++    :root {
++      --bg:#f3f4f6; --card:#fff; --text:#1f2937; --muted:#6b7280; --accent:#2563eb; --border:#e5e7eb; --sidebar:#ffffff;
++    }
++    body[data-theme="dark"] {
++      --bg:#0b1220; --card:#121a2a; --text:#e5e7eb; --muted:#94a3b8; --accent:#3b82f6; --border:#22304a; --sidebar:#0f172a;
++    }
++    body[data-theme="purple"] {
++      --bg:#130f1f; --card:#1f1733; --text:#f3e8ff; --muted:#c4b5fd; --accent:#a855f7; --border:#3b2d57; --sidebar:#1a1330;
++    }
++    * { box-sizing:border-box; }
++    body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--text); }
++    .layout { min-height:100vh; display:grid; grid-template-columns:240px 1fr; }
++    .sidebar { background:var(--sidebar); border-right:1px solid var(--border); padding:20px 14px; }
++    .sidebar h2 { margin:0 0 12px; color:var(--muted); }
 +    .menu { display:grid; gap:8px; }
-+    .menu-item { border:1px solid var(--border); background:transparent; text-align:left; border-radius:10px; padding:10px 12px; font-weight:600; cursor:pointer; }
-+    .menu-item.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-+
-+    .content { padding: 24px 16px; }
-+    .container { max-width:900px; margin:0 auto; display:grid; gap:16px; }
-+    header,.calendar-card,.shortcuts-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
-+    #vn-time{ font-size:1.2rem; font-weight:700; margin:8px 0 4px; } #vn-date{ margin:0; color:var(--muted); }
-+    .calendar-header{ display:flex; align-items:center; justify-content:space-between; }
-+    .calendar-header button{ border:1px solid var(--border); background:transparent; border-radius:8px; width:36px; height:36px; }
-+    .calendar-grid{ margin-top:10px; display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
++    .menu-item { border:1px solid var(--border); background:transparent; color:var(--text); padding:10px 12px; text-align:left; border-radius:10px; font-weight:700; cursor:pointer; }
++    .menu-item.active { background:var(--accent); color:#fff; border-color:var(--accent); }
++    .content { padding:24px 18px; }
++    .container { max-width:1060px; margin:0 auto; display:grid; gap:16px; }
++    header,.calendar-card,.shortcuts-card,.settings-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; }
++    .headline { color:var(--muted); font-weight:700; font-size:.85rem; }
++    .hero-title { margin:6px 0; font-size:clamp(1.6rem,3.8vw,2.8rem); line-height:1.15; }
++    #vn-time { font-size:1.2rem; font-weight:700; margin:8px 0 4px; }
++    #vn-date { margin:0; color:var(--muted); }
++    .calendar-header { display:flex; align-items:center; justify-content:space-between; }
++    .calendar-header button { border:1px solid var(--border); border-radius:8px; background:transparent; color:var(--text); width:36px; height:36px; }
++    .calendar-grid { margin-top:10px; display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
 +    .cell{ text-align:center; padding:10px 0; border-radius:8px; font-size:.95rem; }
 +    .cell.header{ font-weight:700; color:var(--muted);} .cell.day{ border:1px solid var(--border);} .cell.empty{opacity:.25;} .cell.today{ background:var(--accent); color:#fff; border-color:var(--accent);}
-+    .shortcut-title-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-+    #add-shortcut{ border:none; border-radius:8px; background:var(--accent); color:#fff; padding:8px 12px; font-weight:600; cursor:pointer; }
-+    .shortcut-list{ margin-top:12px; display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
-+    .shortcut-item{ position:relative; text-decoration:none; color:inherit; border:1px solid var(--border); border-radius:10px; padding:12px; display:flex; align-items:center; gap:10px; }
++    .shortcut-title-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
++    #add-shortcut { border:none; border-radius:8px; background:var(--accent); color:#fff; padding:8px 12px; font-weight:700; cursor:pointer; }
++    .shortcut-list { margin-top:12px; display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; }
++    .shortcut-item { position:relative; text-decoration:none; color:inherit; border:1px solid var(--border); border-radius:12px; padding:12px; display:flex; align-items:center; gap:10px; }
 +    .shortcut-icon{ width:24px; height:24px; border-radius:6px; object-fit:cover; }
 +    .shortcut-name{ flex:1; word-break:break-word; }
 +    .icon-btn{ position:absolute; top:4px; border:none; background:transparent; cursor:pointer; }
 +    .icon-btn.edit{ right:24px; } .icon-btn.remove{ right:4px; }
-+    .settings-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; display:none; }
-+    .settings-card.show { display:block; }
-+    @media (max-width: 820px) {
-+      .layout { grid-template-columns: 1fr; }
-+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-+    }
++    .settings-card { display:none; }
++    .settings-card.show { display:block; max-width:1060px; margin:0 auto; }
++    .theme-row { margin-top:10px; display:grid; gap:8px; max-width:320px; }
++    #theme-select { padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); }
++    @media (max-width: 860px){ .layout{ grid-template-columns:1fr; } .sidebar{ border-right:none; border-bottom:1px solid var(--border); } }
 +  </style>
 +</head>
 +<body>
@@ -52,15 +61,16 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +    <aside class="sidebar">
 +      <h2>Menu</h2>
 +      <nav class="menu">
-+        <button id="menu-home" class="menu-item active">Home</button>
-+        <button id="menu-setting" class="menu-item">Setting</button>
++        <button id="menu-home" class="menu-item active">HOME</button>
++        <button id="menu-setting" class="menu-item">SETTING</button>
 +      </nav>
 +    </aside>
 +
 +    <section class="content">
 +      <main id="home-view" class="container">
 +        <header>
-+          <h1>Home</h1>
++          <div class="headline">HOME DASHBOARD</div>
++          <h1 class="hero-title">Giao diện trực quan: Lối tắt nhanh, Lịch Việt Nam và Giờ Việt Nam</h1>
 +          <p id="vn-time" aria-live="polite"></p>
 +          <p id="vn-date"></p>
 +        </header>
@@ -77,7 +87,7 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +
 +        <section class="shortcuts-card">
 +          <div class="shortcut-title-row">
-+            <h2>Lối tắt</h2>
++            <h2>HOME - Lối tắt mở tab nhanh</h2>
 +            <button id="add-shortcut">Thêm lối tắt</button>
 +          </div>
 +          <div id="shortcut-list" class="shortcut-list"></div>
@@ -85,8 +95,16 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +      </main>
 +
 +      <section id="setting-view" class="settings-card">
-+        <h2>Setting</h2>
-+        <p>Bạn có thể quay về Home để thêm lối tắt, đổi icon và xem lịch/giờ Việt Nam.</p>
++        <h2>SETTING</h2>
++        <p>Điều chỉnh màu giao diện theo ý bạn.</p>
++        <div class="theme-row">
++          <label for="theme-select">Màu giao diện</label>
++          <select id="theme-select">
++            <option value="light">Sáng (mặc định)</option>
++            <option value="dark">Tối</option>
++            <option value="purple">Tím đậm</option>
++          </select>
++        </div>
 +      </section>
 +    </section>
 +  </div>
@@ -102,17 +120,26 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +
 +  <script>
 +    const STORAGE_KEY = 'hmt_shortcuts_v1';
++    const THEME_KEY = 'hmt_theme_v1';
 +    const defaultIcon = (url) => `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}&sz=64`;
 +    const shortcutList = document.getElementById('shortcut-list');
 +    const addBtn = document.getElementById('add-shortcut');
 +    const tpl = document.getElementById('shortcut-template');
-+    let shortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-+    const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(shortcuts));
-+
 +    const homeView = document.getElementById('home-view');
 +    const settingView = document.getElementById('setting-view');
 +    const menuHome = document.getElementById('menu-home');
 +    const menuSetting = document.getElementById('menu-setting');
++    const themeSelect = document.getElementById('theme-select');
++    let shortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
++    const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(shortcuts));
++
++    function applyTheme(theme) {
++      const finalTheme = ['light', 'dark', 'purple'].includes(theme) ? theme : 'light';
++      document.body.setAttribute('data-theme', finalTheme);
++      themeSelect.value = finalTheme;
++      localStorage.setItem(THEME_KEY, finalTheme);
++    }
++    themeSelect.addEventListener('change', (e) => applyTheme(e.target.value));
 +
 +    function showView(view) {
 +      const isHome = view === 'home';
@@ -121,7 +148,6 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +      menuHome.classList.toggle('active', isHome);
 +      menuSetting.classList.toggle('active', !isHome);
 +    }
-+
 +    menuHome.addEventListener('click', () => showView('home'));
 +    menuSetting.addEventListener('click', () => showView('setting'));
 +
@@ -134,14 +160,7 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +        const img = node.querySelector('.shortcut-icon');
 +        img.src = item.icon || defaultIcon(item.url);
 +        img.alt = `Icon ${item.name}`;
-+
-+        node.querySelector('.remove').addEventListener('click', (e) => {
-+          e.preventDefault();
-+          shortcuts.splice(index, 1);
-+          save();
-+          renderShortcuts();
-+        });
-+
++        node.querySelector('.remove').addEventListener('click', (e) => { e.preventDefault(); shortcuts.splice(index, 1); save(); renderShortcuts(); });
 +        node.querySelector('.edit').addEventListener('click', (e) => {
 +          e.preventDefault();
 +          const next = prompt('Dán URL icon mới:', item.icon || '');
@@ -150,7 +169,6 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +          save();
 +          renderShortcuts();
 +        });
-+
 +        shortcutList.appendChild(node);
 +      });
 +    }
@@ -178,11 +196,8 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +
 +    const monthLabel = document.getElementById('month-label');
 +    const calendarGrid = document.getElementById('calendar-grid');
-+    const prevMonth = document.getElementById('prev-month');
-+    const nextMonth = document.getElementById('next-month');
 +    let calendarDate = new Date();
 +    const toVietnamNow = () => new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }));
-+
 +    function renderCalendar() {
 +      const y = calendarDate.getFullYear();
 +      const m = calendarDate.getMonth();
@@ -191,31 +206,20 @@ index 0000000000000000000000000000000000000000..0269b805cd9b6a83132f4c99491a1e68
 +      const start = (first.getDay() + 6) % 7;
 +      const days = new Date(y, m + 1, 0).getDate();
 +      calendarGrid.innerHTML = '';
-+      ['T2','T3','T4','T5','T6','T7','CN'].forEach((d) => {
-+        const el = document.createElement('div');
-+        el.className = 'cell header';
-+        el.textContent = d;
-+        calendarGrid.appendChild(el);
-+      });
-+      for (let i = 0; i < start; i++) {
-+        const el = document.createElement('div');
-+        el.className = 'cell day empty';
-+        calendarGrid.appendChild(el);
-+      }
++      ['T2','T3','T4','T5','T6','T7','CN'].forEach((d) => { const el = document.createElement('div'); el.className = 'cell header'; el.textContent = d; calendarGrid.appendChild(el); });
++      for (let i = 0; i < start; i++) { const el = document.createElement('div'); el.className = 'cell day empty'; calendarGrid.appendChild(el); }
 +      const vnNow = toVietnamNow();
 +      for (let d = 1; d <= days; d++) {
-+        const el = document.createElement('div');
-+        el.className = 'cell day';
-+        el.textContent = d;
++        const el = document.createElement('div'); el.className = 'cell day'; el.textContent = d;
 +        if (y === vnNow.getFullYear() && m === vnNow.getMonth() && d === vnNow.getDate()) el.classList.add('today');
 +        calendarGrid.appendChild(el);
 +      }
 +    }
-+
-+    prevMonth.addEventListener('click', () => { calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1); renderCalendar(); });
-+    nextMonth.addEventListener('click', () => { calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1); renderCalendar(); });
++    document.getElementById('prev-month').addEventListener('click', () => { calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1); renderCalendar(); });
++    document.getElementById('next-month').addEventListener('click', () => { calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1); renderCalendar(); });
 +
 +    renderShortcuts();
++    applyTheme(localStorage.getItem(THEME_KEY) || 'light');
 +    renderCalendar();
 +    updateVietnamClock();
 +    showView('home');
